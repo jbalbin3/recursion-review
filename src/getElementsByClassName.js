@@ -7,7 +7,7 @@
 var getElementsByClassName = function(className) {
   let a = [];
 
-  checkElement(document.body);
+
 
   var checkElement = function(element) {
     if (element.classList !== undefined) {
@@ -21,5 +21,6 @@ var getElementsByClassName = function(className) {
       }
     }
   };
+  checkElement(document.body);
   return a;
 };
