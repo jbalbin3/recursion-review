@@ -12,27 +12,24 @@ var stringifyJSON = function(obj) {
   if (typeof obj === 'boolean') { return obj.toString(); }
   if (typeof obj === 'string') { return '"' + obj + '"'; }
 
+  if (typeof obj === 'undefined') { return undefined; }
+  if (typeof obj === 'function') { return undefined; }
+
   if (typeof obj === 'object' && Array.isArray(obj)) {
-    var returnArray = obj.map(function(element) {
-      return stringifyJSON(element);
-    });
-    return '[' + returnArray.join(',') + ']';
+    return '[' + obj.map(e => stringifyJSON(e)) + ']';
   }
 
-  if (typeof obj === 'object' && !Array.isArray(obj)) {
-    if (!Object.keys(obj).length) { return '{}'; }
-    var tempString = '{';
-    Object.keys(obj).forEach(function(key) {
-      var stringifiedKey = stringifyJSON(key);
-      // for objects: undefined, Functions are omitted in objects
-      if (obj[key] !== undefined && typeof obj[key] !== 'function') {
-        tempString = tempString.concat(stringifiedKey + ':' + stringifyJSON(obj[key]) + ',');
+  if (typeof obj === 'object') {
+    return '{' + mapObj(obj, (k, v) => stringifyJSON(k) + ':' + stringifyJSON(v)) + '}';
+  }
+
+  let a = [];
+  var mapObj = function (o, f) {
+    for (k in o) {
+      if (typeof o[k] !== 'function' && typeof o[k] !== 'undefined') {
+        a.push(f(k, o[k]));
       }
-    });
-    if (tempString === '{') { return '{}'; }
-    return tempString.slice(0, tempString.length - 1) + '}';
-  }
-
-  if (typeof obj === 'function') { return null; }
-  if (typeof obj === 'undefined') { return null; }
+    }
+    return a;
+  };
 };
