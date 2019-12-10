@@ -4,7 +4,23 @@
 // };
 
 // But instead we're going to implement it from scratch:
-var getElementsByClassName = function(className
-) {
-  // your code here
+var getElementsByClassName = function(className) {
+  let a = [];
+
+
+
+  var checkElement = function(element) {
+    if (element.classList !== undefined) {
+      if (element.classList.contains(className)) {
+        a.push(element);
+      }
+      if (element.hasChildNodes()) {
+        element.childNodes.forEach(e => {
+          checkElement(e);
+        });
+      }
+    }
+  };
+  checkElement(document.body);
+  return a;
 };
